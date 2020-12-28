@@ -1,0 +1,12 @@
+body {
+    margin: 0px;
+    overflow: hidden;
+}
+
+rect {
+    fill: rgb(5, 93, 145);
+}
+
+text {
+    font-size: 2em;
+}

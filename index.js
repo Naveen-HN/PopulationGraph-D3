@@ -4,6 +4,7 @@ const max = d3.max;
 const scaleBand = d3.scaleBand;
 const axisLeft = d3.axisLeft;
 const axisBottom = d3.axisBottom;
+const format = d3.format;
 const svg = d3.select('svg');
 const width = +svg.attr('width');
 const height = +svg.attr('height');
@@ -16,8 +17,8 @@ const render = data => {
     const margin = {
         top: 20,
         right: 20,
-        bottom: 20,
-        left: 120
+        bottom: 30,
+        left: 200
     }
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -30,8 +31,10 @@ const render = data => {
 
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
-    g.append('g').call(axisLeft(yScale));
-    g.append('g').call(axisBottom(xScale)).attr('transform', `translate(0,${innerHeight})`);;
+    const xAxisTickFormat = number => format('.3s')(number).replace('G', 'B');
+    const xAxis = axisBottom(xScale).tickFormat(xAxisTickFormat);
+    g.append('g').call(axisLeft(yScale)).selectAll('.domain, .tick line').remove();
+    g.append('g').call(xAxis).attr('transform', `translate(0,${innerHeight})`).selectAll('.domain').remove();;
 
     g.selectAll('rect').data(data)
         .enter().append('rect')
