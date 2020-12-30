@@ -15,9 +15,9 @@ const render = data => {
     const xValue = d => d.population;
     const yValue = d => d.country;
     const margin = {
-        top: 20,
+        top: 50,
         right: 20,
-        bottom: 30,
+        bottom: 70,
         left: 200
     }
     const innerWidth = width - margin.left - margin.right;
@@ -32,9 +32,13 @@ const render = data => {
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
     const xAxisTickFormat = number => format('.3s')(number).replace('G', 'B');
-    const xAxis = axisBottom(xScale).tickFormat(xAxisTickFormat);
+    const xAxis = axisBottom(xScale).tickFormat(xAxisTickFormat).tickSize(-innerHeight);
     g.append('g').call(axisLeft(yScale)).selectAll('.domain, .tick line').remove();
-    g.append('g').call(xAxis).attr('transform', `translate(0,${innerHeight})`).selectAll('.domain').remove();;
+    const xAxisG = g.append('g').call(xAxis).attr('transform', `translate(0,${innerHeight})`);
+
+    xAxisG.select('.domain').remove();
+
+    xAxisG.append('text').attr('class', 'axis-label').attr('y', 60).attr('x', innerWidth / 2).attr('fill', 'black').text('Population')
 
     g.selectAll('rect').data(data)
         .enter().append('rect')
@@ -42,7 +46,12 @@ const render = data => {
         .attr('width', d => xScale(xValue(d)))
         .attr('height', yScale.bandwidth())
         .attr('fill', 'steelblue')
+
+
+    g.append('text').attr('class', 'title').attr('y', -10).text('Top 14 most populous countries in the world')
 }
+
+
 
 csv('data.csv').then(data => {
     data.forEach(d => {
